@@ -29,5 +29,6 @@ public class BookModel {
     @Max(value = 2025)
     @PastOrPresent
     private Integer publicationYear;
+    private boolean isAvailable;
 
 }
