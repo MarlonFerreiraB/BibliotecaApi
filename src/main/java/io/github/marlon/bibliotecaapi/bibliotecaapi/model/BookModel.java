@@ -8,7 +8,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
-import java.util.Date;
 
 @Entity
 @Table(name = "book")
@@ -24,11 +23,12 @@ public class BookModel {
     @NotBlank(message = "Nao pode estar em branco")
     @Size(max = 100, message = "Limite de caractere atingido.")
     private String title;
-    @NotBlank(message = "Nao pode estar em branco")
-    @Min(value = 1900)
-    @Max(value = 2025)
+    @NotNull(message = "Nao pode estar em branco")
     @PastOrPresent
-    private Integer publicationYear;
+    private LocalDate publicationYear;
     private boolean isAvailable;
+    @ManyToOne
+    @JoinColumn(name = "author_id")
+    private AuthorModel authorModel;
 
 }
