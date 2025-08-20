@@ -3,11 +3,16 @@ package io.github.marlon.bibliotecaapi.bibliotecaapi.controller;
 import io.github.marlon.bibliotecaapi.bibliotecaapi.model.AuthorModel;
 import io.github.marlon.bibliotecaapi.bibliotecaapi.repository.AuthorRepository;
 import io.github.marlon.bibliotecaapi.bibliotecaapi.service.AuthorService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,9 +26,14 @@ public class AuhorController {
     AuthorRepository authorRepository;
 
     @PostMapping()
-    public ResponseEntity<AuthorModel> createAuthor(@RequestBody AuthorModel authorModel){
+    public ResponseEntity<AuthorModel> createAuthor(@RequestBody @Valid AuthorModel authorModel){
         AuthorModel nvAuthor = authorService.saveAuthor(authorModel);
-        return new ResponseEntity<>(nvAuthor, HttpStatus.CREATED);
+        URI location = ServletUriComponentsBuilder
+                .fromCurrentRequest()
+                .path("{id}")
+                .buildAndExpand(nvAuthor.getId())
+                .toUri();
+        return ResponseEntity.created(location).build();
     }
 
     @GetMapping()
@@ -35,8 +45,17 @@ public class AuhorController {
         return ResponseEntity.ok(authorModelList);
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<AuthorModel> updateAuthor(@PathVariable String id, @RequestBody @Valid AuthorModel authorModel){
+        AuthorModel updateAuthor = authorService.updateAuthor(id,authorModel);
+        if(updateAuthor == null) return ResponseEntity.notFound().build();
+        return ResponseEntity.ok(updateAuthor);
+    }
+
+
+
     @DeleteMapping("{id}")
-    public ResponseEntity<Void> deleteAuthorById(String id){
+    public ResponseEntity<Void> deleteAuthorById(@PathVariable String id){
         Optional<AuthorModel> optionalAuthorModel = authorRepository.findById(id);
 
         if(!optionalAuthorModel.isPresent()){
