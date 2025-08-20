@@ -27,7 +27,7 @@ public class BookController {
     }
 
     @GetMapping
-    public ResponseEntity<BookModel> findAuthorByTitle(@RequestBody  String name){
+    public ResponseEntity<BookModel> findAuthorByTitle(@RequestParam  String name){
         BookModel bookModel = bookService.findByBook(name);
         if(bookModel == null){
             return ResponseEntity.notFound().build();
@@ -36,7 +36,7 @@ public class BookController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteBook(@RequestBody String id){
+    public ResponseEntity<Void> deleteBook(@PathVariable String id){
         Optional<BookModel> bookModel = bookRepository.findById(id);
         if(!bookModel.isPresent()){
             return ResponseEntity.notFound().build();
