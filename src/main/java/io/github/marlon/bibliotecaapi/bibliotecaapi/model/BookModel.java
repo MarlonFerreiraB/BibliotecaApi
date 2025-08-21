@@ -6,8 +6,12 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "book")
@@ -15,6 +19,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @Builder
 @Data
+@EntityListeners(AuditingEntityListener.class)
 public class BookModel {
     private Integer actualyYear = LocalDate.now().getYear();
     @Id
@@ -30,5 +35,10 @@ public class BookModel {
     @ManyToOne
     @JoinColumn(name = "author_id")
     private AuthorModel authorModel;
+    @CreatedDate
+    @Column(updatable = false)
+    private LocalDateTime createdAt;
+    @LastModifiedDate
+    private LocalDateTime updateAt;
 
 }
