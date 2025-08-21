@@ -8,7 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import java.awt.print.Book;
 import java.util.Optional;
 
 @RestController
@@ -33,6 +33,13 @@ public class BookController {
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(bookModel);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<BookModel> updateBook(@PathVariable String id, @RequestBody BookModel bookModel){
+        BookModel bookUpdate = bookService.updateBook(id, bookModel);
+        if(bookUpdate == null) return ResponseEntity.notFound().build();
+        return ResponseEntity.ok(bookUpdate);
     }
 
     @DeleteMapping("/{id}")
