@@ -25,12 +25,11 @@ public class AuthorModel {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
-    @NotBlank(message = "Este campo não pode ficar em branco.")
-    @Size(max = 100, message = "Limite de caractere atingido.")
     private String name;
     @OneToMany(mappedBy = "authorModel")
     private List<BookModel> books;
     @CreatedDate
+    @Column(updatable = false)
     private LocalDateTime createdAt;
     @LastModifiedDate
     private LocalDateTime updatedAt;

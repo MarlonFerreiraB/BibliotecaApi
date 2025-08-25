@@ -1,5 +1,6 @@
 package io.github.marlon.bibliotecaapi.bibliotecaapi.model;
 
+import io.github.marlon.bibliotecaapi.bibliotecaapi.enums.GeneroEnum;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
@@ -25,17 +26,14 @@ public class BookModel {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
-    @NotBlank(message = "Nao pode estar em branco")
-    @Size(max = 100, message = "Limite de caractere atingido.")
     private String title;
-    @NotNull(message = "Nao pode estar em branco")
-    @PastOrPresent
+    private GeneroEnum generoEnum;
     private LocalDate publicationYear;
     private boolean isAvailable;
     @ManyToOne
     @JoinColumn(name = "author_id")
     private AuthorModel authorModel;
-    @CreatedDate
+    @CreatedDate()
     @Column(updatable = false)
     private LocalDateTime createdAt;
     @LastModifiedDate
