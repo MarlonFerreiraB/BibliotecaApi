@@ -1,5 +1,6 @@
 package io.github.marlon.bibliotecaapi.bibliotecaapi.controller;
 
+import io.github.marlon.bibliotecaapi.bibliotecaapi.dto.AuthorDTO;
 import io.github.marlon.bibliotecaapi.bibliotecaapi.model.AuthorModel;
 import io.github.marlon.bibliotecaapi.bibliotecaapi.repository.AuthorRepository;
 import io.github.marlon.bibliotecaapi.bibliotecaapi.service.AuthorService;
@@ -26,8 +27,8 @@ public class AuhorController {
     AuthorRepository authorRepository;
 
     @PostMapping()
-    public ResponseEntity<AuthorModel> createAuthor(@RequestBody @Valid AuthorModel authorModel){
-        AuthorModel nvAuthor = authorService.saveAuthor(authorModel);
+    public ResponseEntity<AuthorModel> createAuthor(@RequestBody @Valid AuthorDTO authorDTO){
+        AuthorModel nvAuthor = authorService.saveAuthor(authorDTO);
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest()
                 .path("{id}")
@@ -46,8 +47,8 @@ public class AuhorController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<AuthorModel> updateAuthor(@PathVariable String id, @RequestBody @Valid AuthorModel authorModel){
-        AuthorModel updateAuthor = authorService.updateAuthor(id,authorModel);
+    public ResponseEntity<AuthorModel> updateAuthor(@PathVariable String id, @RequestBody @Valid AuthorDTO authorDTO){
+        AuthorModel updateAuthor = authorService.updateAuthor(id,authorDTO);
         if(updateAuthor == null) return ResponseEntity.notFound().build();
         return ResponseEntity.ok(updateAuthor);
     }
