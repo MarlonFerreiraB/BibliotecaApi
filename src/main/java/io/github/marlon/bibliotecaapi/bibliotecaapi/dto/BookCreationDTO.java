@@ -13,7 +13,7 @@ import java.time.LocalDate;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class BookDTO {
+public class BookCreationDTO {
     @NotBlank(message = "Nao pode estar em branco")
     @Size(max = 100, message = "Limite de caractere atingido.")
     private String title;
@@ -26,6 +26,6 @@ public class BookDTO {
     @NotNull
     private boolean isAvailable;
 
-    private String author_id;
+    private String authorId;
 
 }

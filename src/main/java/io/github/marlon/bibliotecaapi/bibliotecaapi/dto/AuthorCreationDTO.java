@@ -13,7 +13,7 @@ import java.util.List;
 @NoArgsConstructor
 @Data
 
-public class AuthorDTO {
+public class AuthorCreationDTO {
 
     @NotBlank(message = "Este campo não pode ficar em branco.")
     @Size(max = 100, message = "Limite de caractere atingido.")
