@@ -1,15 +1,12 @@
 package io.github.marlon.bibliotecaapi.bibliotecaapi.controller;
 
-import io.github.marlon.bibliotecaapi.bibliotecaapi.dto.AuthorDTO;
+import io.github.marlon.bibliotecaapi.bibliotecaapi.dto.AuthorCreationDTO;
 import io.github.marlon.bibliotecaapi.bibliotecaapi.model.AuthorModel;
 import io.github.marlon.bibliotecaapi.bibliotecaapi.repository.AuthorRepository;
 import io.github.marlon.bibliotecaapi.bibliotecaapi.service.AuthorService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -27,8 +24,8 @@ public class AuhorController {
     AuthorRepository authorRepository;
 
     @PostMapping()
-    public ResponseEntity<AuthorModel> createAuthor(@RequestBody @Valid AuthorDTO authorDTO){
-        AuthorModel nvAuthor = authorService.saveAuthor(authorDTO);
+    public ResponseEntity<AuthorModel> createAuthor(@RequestBody @Valid AuthorCreationDTO authorCreationDTO){
+        AuthorModel nvAuthor = authorService.saveAuthor(authorCreationDTO);
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest()
                 .path("{id}")
@@ -47,8 +44,8 @@ public class AuhorController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<AuthorModel> updateAuthor(@PathVariable String id, @RequestBody @Valid AuthorDTO authorDTO){
-        AuthorModel updateAuthor = authorService.updateAuthor(id,authorDTO);
+    public ResponseEntity<AuthorModel> updateAuthor(@PathVariable String id, @RequestBody @Valid AuthorCreationDTO authorCreationDTO){
+        AuthorModel updateAuthor = authorService.updateAuthor(id, authorCreationDTO);
         if(updateAuthor == null) return ResponseEntity.notFound().build();
         return ResponseEntity.ok(updateAuthor);
     }
