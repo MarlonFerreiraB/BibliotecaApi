@@ -4,6 +4,7 @@ import io.github.marlon.bibliotecaapi.bibliotecaapi.dto.BookCreationDTO;
 import io.github.marlon.bibliotecaapi.bibliotecaapi.model.BookModel;
 import io.github.marlon.bibliotecaapi.bibliotecaapi.repository.BookRepository;
 import io.github.marlon.bibliotecaapi.bibliotecaapi.service.BookService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,7 +23,7 @@ public class BookController {
     BookRepository bookRepository;
 
     @PostMapping
-    public ResponseEntity<BookModel> createBook(@RequestBody BookCreationDTO bookCreationDTO){
+    public ResponseEntity<BookModel> createBook(@RequestBody @Valid  BookCreationDTO bookCreationDTO){
 
         BookModel bookModel = bookService.saveBook(bookCreationDTO);
 
