@@ -5,7 +5,6 @@ import io.github.marlon.bibliotecaapi.bibliotecaapi.model.AuthorModel;
 import io.github.marlon.bibliotecaapi.bibliotecaapi.model.BookModel;
 import io.github.marlon.bibliotecaapi.bibliotecaapi.repository.AuthorRepository;
 import io.github.marlon.bibliotecaapi.bibliotecaapi.repository.BookRepository;
-import io.github.marlon.bibliotecaapi.bibliotecaapi.utils.BookMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,13 +18,17 @@ public class BookService {
     @Autowired
     private AuthorRepository authorRepository;
 
-    @Autowired
-    private BookMapper bookMapper;
-
     @Transactional
     public BookModel saveBook(BookCreationDTO bookCreationDTO){
-        BookModel bookModel = bookMapper.toEntity(bookCreationDTO);
-        AuthorModel authorModel = authorRepository.findById(bookCreationDTO.getAuthorId()).orElseThrow(() -> new RuntimeException("n foi possivel achar o autor"));
+        BookModel bookModel = new BookModel();
+        bookModel.setTitle(bookCreationDTO.getTitle());
+        bookModel.setPublicationYear(bookCreationDTO.getPublicationYear());
+        bookModel.setGeneroEnum(bookCreationDTO.getGeneroEnum());
+        bookModel.setAvailable(bookCreationDTO.isAvailable());
+
+        AuthorModel authorModel = authorRepository.findById(bookCreationDTO.getAuthorId())
+                .orElseThrow(() -> new RuntimeException("n foi possivel achar o autor"));
+
         bookModel.setAuthorModel(authorModel);
 
         return bookRepository.save(bookModel);
@@ -37,7 +40,12 @@ public class BookService {
     @Transactional
     public BookModel updateBook(String id, BookCreationDTO bookCreationDTO){
         if(!bookRepository.existsById(id)) return null;
-        BookModel bookModel = bookMapper.toEntity(bookCreationDTO);
+        BookModel bookModel = new BookModel();
+        bookModel.setTitle(bookCreationDTO.getTitle());
+        bookModel.setPublicationYear(bookCreationDTO.getPublicationYear());
+        bookModel.setGeneroEnum(bookCreationDTO.getGeneroEnum());
+        bookModel.setAvailable(bookCreationDTO.isAvailable());
+        bookModel.setId(id);
 
         return bookRepository.save(bookModel);
     }
