@@ -26,9 +26,15 @@ public class BookModel {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
+    @NotBlank(message = "Nao pode estar em branco")
+    @Size(max = 100, message = "Limite de caractere atingido.")
     private String title;
+    @NotNull(message = "nao pode estar em branco.")
     private GeneroEnum generoEnum;
+    @NotNull(message = "Nao pode estar em branco.")
+    @PastOrPresent
     private LocalDate publicationYear;
+    @NotNull
     private boolean isAvailable;
     @ManyToOne
     @JoinColumn(name = "author_id")
