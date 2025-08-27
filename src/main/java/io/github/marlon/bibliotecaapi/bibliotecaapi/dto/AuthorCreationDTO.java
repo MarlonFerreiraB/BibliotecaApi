@@ -18,5 +18,4 @@ public class AuthorCreationDTO {
     @NotBlank(message = "Este campo não pode ficar em branco.")
     @Size(max = 100, message = "Limite de caractere atingido.")
     private String name;
-    private List<BookModel> books;
 }
