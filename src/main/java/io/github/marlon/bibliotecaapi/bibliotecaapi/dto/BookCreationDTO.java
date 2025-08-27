@@ -25,7 +25,8 @@ public class BookCreationDTO {
     private LocalDate publicationYear;
     @NotNull
     private boolean isAvailable;
-
+    @NotNull(message = "id esta nulo")
     private String authorId;
+
 
 }
