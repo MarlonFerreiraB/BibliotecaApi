@@ -1,6 +1,8 @@
 package io.github.marlon.bibliotecaapi.bibliotecaapi.controller;
 
 import io.github.marlon.bibliotecaapi.bibliotecaapi.dto.AuthorCreationDTO;
+import io.github.marlon.bibliotecaapi.bibliotecaapi.dto.AuthorResponseDTO;
+import io.github.marlon.bibliotecaapi.bibliotecaapi.dto.AuthorUpdateDTO;
 import io.github.marlon.bibliotecaapi.bibliotecaapi.model.AuthorModel;
 import io.github.marlon.bibliotecaapi.bibliotecaapi.repository.AuthorRepository;
 import io.github.marlon.bibliotecaapi.bibliotecaapi.service.AuthorService;
@@ -11,21 +13,21 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
-import java.util.List;
 import java.util.Optional;
 
 @RestController
 @RequestMapping("author")
-public class AuhorController {
+public class AuthorController {
 
     @Autowired
     AuthorService authorService;
     @Autowired
     AuthorRepository authorRepository;
 
+
     @PostMapping()
-    public ResponseEntity<AuthorModel> createAuthor(@RequestBody @Valid AuthorCreationDTO authorCreationDTO){
-        AuthorModel nvAuthor = authorService.saveAuthor(authorCreationDTO);
+    public ResponseEntity<AuthorResponseDTO> createAuthor(@RequestBody @Valid AuthorCreationDTO authorCreationDTO){
+        AuthorResponseDTO nvAuthor = authorService.saveAuthor(authorCreationDTO);
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest()
                 .path("{id}")
@@ -34,18 +36,18 @@ public class AuhorController {
         return ResponseEntity.created(location).build();
     }
 
-    @GetMapping()
+    /*@GetMapping()
     public ResponseEntity<List<AuthorModel>> findbyAuthor(@PathVariable String name){
         List<AuthorModel> authorModelList = authorService.findByNameContainingIgnoreCase(name);
         if(authorModelList .isEmpty()){
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(authorModelList);
-    }
+    }*/
 
     @PutMapping("/{id}")
-    public ResponseEntity<AuthorModel> updateAuthor(@PathVariable String id, @RequestBody @Valid AuthorCreationDTO authorCreationDTO){
-        AuthorModel updateAuthor = authorService.updateAuthor(id, authorCreationDTO);
+    public ResponseEntity<AuthorResponseDTO> updateAuthor(@PathVariable String id, @RequestBody @Valid AuthorUpdateDTO authorUpdateDTO){
+        AuthorResponseDTO updateAuthor = authorService.updateAuthor(id, authorUpdateDTO);
         if(updateAuthor == null) return ResponseEntity.notFound().build();
         return ResponseEntity.ok(updateAuthor);
     }
@@ -60,6 +62,11 @@ public class AuhorController {
             return ResponseEntity.notFound().build();
         }
         authorService.deleteAuthor(optionalAuthorModel.get().getName());
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok().build();
+    }
+    @GetMapping()
+    public ResponseEntity<AuthorResponseDTO> getAuthor(@RequestParam String id){
+        AuthorResponseDTO authorResponseDTO = authorService.getAuthor(id);
+        return ResponseEntity.ok(authorResponseDTO);
     }
 }
