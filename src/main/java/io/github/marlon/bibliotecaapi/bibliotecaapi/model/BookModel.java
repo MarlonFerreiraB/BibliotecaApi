@@ -38,7 +38,7 @@ public class BookModel {
     private boolean isAvailable;
     @ManyToOne
     @JoinColumn(name = "author_id")
-    private AuthorModel authorModel;
+    private AuthorModel author;
     @CreatedDate()
     @Column(updatable = false)
     private LocalDateTime createdAt;

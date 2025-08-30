@@ -28,7 +28,7 @@ public class AuthorModel {
     @NotBlank(message = "Este campo não pode ficar em branco.")
     @Size(max = 100, message = "Limite de caractere atingido.")
     private String name;
-    @OneToMany(mappedBy = "authorModel")
+    @OneToMany(mappedBy = "author")
     private List<BookModel> books;
     @CreatedDate
     @Column(updatable = false)
