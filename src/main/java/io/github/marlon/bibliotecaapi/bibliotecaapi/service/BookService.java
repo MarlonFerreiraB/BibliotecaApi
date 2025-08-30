@@ -29,7 +29,7 @@ public class BookService {
         AuthorModel authorModel = authorRepository.findById(bookCreationDTO.getAuthorId())
                 .orElseThrow(() -> new RuntimeException("n foi possivel achar o autor"));
 
-        bookModel.setAuthorModel(authorModel);
+        bookModel.setAuthor(authorModel);
 
         return bookRepository.save(bookModel);
     }
