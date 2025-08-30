@@ -1,13 +1,11 @@
 package io.github.marlon.bibliotecaapi.bibliotecaapi.dto;
 
-import io.github.marlon.bibliotecaapi.bibliotecaapi.model.BookModel;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
