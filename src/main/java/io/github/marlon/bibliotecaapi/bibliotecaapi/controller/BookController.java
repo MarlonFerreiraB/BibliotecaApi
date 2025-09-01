@@ -1,6 +1,8 @@
 package io.github.marlon.bibliotecaapi.bibliotecaapi.controller;
 
 import io.github.marlon.bibliotecaapi.bibliotecaapi.dto.BookCreationDTO;
+import io.github.marlon.bibliotecaapi.bibliotecaapi.dto.BookResponseDTO;
+import io.github.marlon.bibliotecaapi.bibliotecaapi.dto.BookUpdateDTO;
 import io.github.marlon.bibliotecaapi.bibliotecaapi.model.BookModel;
 import io.github.marlon.bibliotecaapi.bibliotecaapi.repository.BookRepository;
 import io.github.marlon.bibliotecaapi.bibliotecaapi.service.BookService;
@@ -23,21 +25,21 @@ public class BookController {
     BookRepository bookRepository;
 
     @PostMapping
-    public ResponseEntity<BookModel> createBook(@RequestBody @Valid  BookCreationDTO bookCreationDTO){
+    public ResponseEntity<BookResponseDTO> createBook(@RequestBody BookCreationDTO bookCreationDTO){
 
-        BookModel bookModel = bookService.saveBook(bookCreationDTO);
+        BookResponseDTO bookResponseDTO = bookService.saveBook(bookCreationDTO);
 
        URI location = ServletUriComponentsBuilder
                .fromCurrentRequest()
                .path("{id}")
-               .buildAndExpand(bookModel.getId())
+               .buildAndExpand(bookResponseDTO.getId())
                .toUri();
         return ResponseEntity.created(location).build();
     }
 
     @GetMapping
-    public ResponseEntity<BookModel> findAuthorByTitle(@RequestParam  String name){
-        BookModel bookModel = bookService.findByBook(name);
+    public ResponseEntity<BookResponseDTO> findAuthorByTitle(@RequestParam  String name){
+        BookResponseDTO bookModel = bookService.findByBook(name);
         if(bookModel == null){
             return ResponseEntity.notFound().build();
         }
@@ -45,8 +47,8 @@ public class BookController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<BookModel> updateBook(@PathVariable String id, @RequestBody BookCreationDTO bookCreationDTO){
-        BookModel bookUpdate = bookService.updateBook(id, bookCreationDTO);
+    public ResponseEntity<BookResponseDTO> updateBook(@PathVariable String id, @RequestBody BookUpdateDTO bookUpdateDTO){
+        BookResponseDTO bookUpdate = bookService.updateBook(id, bookUpdateDTO);
         if(bookUpdate == null) return ResponseEntity.notFound().build();
         return ResponseEntity.ok(bookUpdate);
     }
@@ -54,7 +56,7 @@ public class BookController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteBook(@PathVariable String id){
         Optional<BookModel> bookModel = bookRepository.findById(id);
-        if(!bookModel.isPresent()){
+        if(bookModel.isPresent()){
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.noContent().build();

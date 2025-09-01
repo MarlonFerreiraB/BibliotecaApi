@@ -57,8 +57,7 @@ public class AuthorController {
     @DeleteMapping("{id}")
     public ResponseEntity<Void> deleteAuthorById(@PathVariable String id){
         Optional<AuthorModel> optionalAuthorModel = authorRepository.findById(id);
-
-        if(!optionalAuthorModel.isPresent()){
+        if(optionalAuthorModel.isEmpty()){
             return ResponseEntity.notFound().build();
         }
         authorService.deleteAuthor(optionalAuthorModel.get().getName());
