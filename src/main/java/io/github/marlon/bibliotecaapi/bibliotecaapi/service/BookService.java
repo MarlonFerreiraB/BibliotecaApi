@@ -1,10 +1,13 @@
 package io.github.marlon.bibliotecaapi.bibliotecaapi.service;
 
 import io.github.marlon.bibliotecaapi.bibliotecaapi.dto.BookCreationDTO;
+import io.github.marlon.bibliotecaapi.bibliotecaapi.dto.BookResponseDTO;
+import io.github.marlon.bibliotecaapi.bibliotecaapi.dto.BookUpdateDTO;
 import io.github.marlon.bibliotecaapi.bibliotecaapi.model.AuthorModel;
 import io.github.marlon.bibliotecaapi.bibliotecaapi.model.BookModel;
 import io.github.marlon.bibliotecaapi.bibliotecaapi.repository.AuthorRepository;
 import io.github.marlon.bibliotecaapi.bibliotecaapi.repository.BookRepository;
+import io.github.marlon.bibliotecaapi.bibliotecaapi.util.BookMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,36 +21,25 @@ public class BookService {
     @Autowired
     private AuthorRepository authorRepository;
 
+    @Autowired
+    BookMapper bookMapper;
+
     @Transactional
-    public BookModel saveBook(BookCreationDTO bookCreationDTO){
-        BookModel bookModel = new BookModel();
-        bookModel.setTitle(bookCreationDTO.getTitle());
-        bookModel.setPublicationYear(bookCreationDTO.getPublicationYear());
-        bookModel.setGeneroEnum(bookCreationDTO.getGeneroEnum());
-        bookModel.setAvailable(bookCreationDTO.isAvailable());
-
-        AuthorModel authorModel = authorRepository.findById(bookCreationDTO.getAuthorId())
-                .orElseThrow(() -> new RuntimeException("n foi possivel achar o autor"));
-
-        bookModel.setAuthor(authorModel);
-
-        return bookRepository.save(bookModel);
+    public BookResponseDTO saveBook(BookCreationDTO bookCreationDTO){
+        BookModel bookModel = bookMapper.toEntity(bookCreationDTO);
+        bookRepository.save(bookModel);
+        return bookMapper.toResponse(bookModel);
     }
     @Transactional(readOnly = true)
-    public BookModel findByBook(String name){
-        return bookRepository.findByTitleIgnoreCase(name);
+    public BookResponseDTO findByBook(String name){
+        return bookMapper.toResponse(bookRepository.findByTitleIgnoreCase(name));
     }
     @Transactional
-    public BookModel updateBook(String id, BookCreationDTO bookCreationDTO){
-        if(!bookRepository.existsById(id)) return null;
-        BookModel bookModel = new BookModel();
-        bookModel.setTitle(bookCreationDTO.getTitle());
-        bookModel.setPublicationYear(bookCreationDTO.getPublicationYear());
-        bookModel.setGeneroEnum(bookCreationDTO.getGeneroEnum());
-        bookModel.setAvailable(bookCreationDTO.isAvailable());
-        bookModel.setId(id);
-
-        return bookRepository.save(bookModel);
+    public BookResponseDTO updateBook(String id, BookUpdateDTO bookUpdateDTO){
+        BookModel bookModel = bookRepository.findById(id).orElseThrow(() -> new RuntimeException("Livro não encontrado"));
+        bookMapper.toEntityUpdate(bookUpdateDTO, bookModel);
+        BookModel updatedBook = bookRepository.save(bookModel);
+        return bookMapper.toResponse(bookRepository.save(updatedBook));
     }
     @Transactional
     public void deleteBook(String name){
