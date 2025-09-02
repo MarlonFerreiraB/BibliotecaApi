@@ -32,14 +32,15 @@ public class BookService {
     }
     @Transactional(readOnly = true)
     public BookResponseDTO findByBook(String name){
-        return bookMapper.toResponse(bookRepository.findByTitleIgnoreCase(name));
+        BookModel bookModel = bookRepository.findByTitleIgnoreCase(name);
+        return bookMapper.toResponse(bookModel);
     }
     @Transactional
     public BookResponseDTO updateBook(String id, BookUpdateDTO bookUpdateDTO){
         BookModel bookModel = bookRepository.findById(id).orElseThrow(() -> new RuntimeException("Livro não encontrado"));
         bookMapper.toEntityUpdate(bookUpdateDTO, bookModel);
         BookModel updatedBook = bookRepository.save(bookModel);
-        return bookMapper.toResponse(bookRepository.save(updatedBook));
+        return bookMapper.toResponse(updatedBook);
     }
     @Transactional
     public void deleteBook(String name){
