@@ -14,7 +14,7 @@ public interface AuthorMapper {
 
     AuthorModel toEntity(AuthorCreationDTO authorCreationDTO);
 
-    @Mapping(target = "books", source = "books")
+
     AuthorResponseDTO toResponse(AuthorModel authorModel);
 
     BookResponseDTO toResponse(BookModel bookModel);
