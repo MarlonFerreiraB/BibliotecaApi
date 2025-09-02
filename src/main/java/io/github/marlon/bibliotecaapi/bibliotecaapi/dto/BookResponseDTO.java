@@ -12,5 +12,5 @@ public class BookResponseDTO {
     private LocalDate publicationYear;
     private boolean isAvailable;
 
-    private AuthorResponseDTO authorResponseDTO;
+    private AuthorResponseDTO author;
 }
