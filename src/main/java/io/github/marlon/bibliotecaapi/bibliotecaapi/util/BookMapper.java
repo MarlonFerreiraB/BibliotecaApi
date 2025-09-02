@@ -12,21 +12,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = AuthorMapper.class)
 public abstract class BookMapper {
 
     @Autowired
     AuthorRepository authorRepository;
 
-    @Mapping(target = "author", expression = "java(authorRepository.findById(bookCreationDTO.getAuthorId()).orElse(null))" )
+    @Mapping(target = "author", expression = "java(authorRepository.findById(bookCreationDTO.getAuthorId()).orElse(null))")
     public abstract BookModel toEntity(BookCreationDTO bookCreationDTO);
+
     @Mapping(target = "authorResponseDTO", source = "author")
     public abstract BookResponseDTO toResponse(BookModel bookModel);
 
-
-    public abstract AuthorResponseDTO toResponseAuthor(AuthorModel authorModel);
-
-    public abstract List<BookResponseDTO> toResponseList(List<BookModel> bookModels);
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     public abstract void toEntityUpdate(BookUpdateDTO bookUpdateDTO, @MappingTarget BookModel bookModel);
 }
