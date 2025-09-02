@@ -3,7 +3,7 @@ package io.github.marlon.bibliotecaapi.bibliotecaapi.controller;
 import io.github.marlon.bibliotecaapi.bibliotecaapi.dto.AuthorCreationDTO;
 import io.github.marlon.bibliotecaapi.bibliotecaapi.dto.AuthorResponseDTO;
 import io.github.marlon.bibliotecaapi.bibliotecaapi.dto.AuthorUpdateDTO;
-import io.github.marlon.bibliotecaapi.bibliotecaapi.model.AuthorModel;
+import io.github.marlon.bibliotecaapi.bibliotecaapi.exceptions.AuthorNotFoundException;
 import io.github.marlon.bibliotecaapi.bibliotecaapi.repository.AuthorRepository;
 import io.github.marlon.bibliotecaapi.bibliotecaapi.service.AuthorService;
 import jakarta.validation.Valid;
@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("author")
@@ -48,24 +47,23 @@ public class AuthorController {
     @PutMapping("/{id}")
     public ResponseEntity<AuthorResponseDTO> updateAuthor(@PathVariable String id, @RequestBody @Valid AuthorUpdateDTO authorUpdateDTO){
         AuthorResponseDTO updateAuthor = authorService.updateAuthor(id, authorUpdateDTO);
-        if(updateAuthor == null) return ResponseEntity.notFound().build();
+        if(updateAuthor == null) throw new AuthorNotFoundException("Author não encontrado");
         return ResponseEntity.ok(updateAuthor);
     }
 
 
 
     @DeleteMapping("{id}")
-    public ResponseEntity<Void> deleteAuthorById(@PathVariable String id){
-        Optional<AuthorModel> optionalAuthorModel = authorRepository.findById(id);
-        if(optionalAuthorModel.isEmpty()){
-            return ResponseEntity.notFound().build();
-        }
-        authorService.deleteAuthor(optionalAuthorModel.get().getName());
-        return ResponseEntity.ok().build();
+    public ResponseEntity<Object> deleteAuthorById(@PathVariable String id){
+        return authorRepository.findById(id).map(a -> {
+            authorService.deleteAuthor(a);
+            return ResponseEntity.noContent().build();
+        }).orElseGet(() -> ResponseEntity.notFound().build());
     }
     @GetMapping()
     public ResponseEntity<AuthorResponseDTO> getAuthor(@RequestParam String id){
         AuthorResponseDTO authorResponseDTO = authorService.getAuthor(id);
+        if(authorResponseDTO == null) throw new AuthorNotFoundException("Author não encontrado");
         return ResponseEntity.ok(authorResponseDTO);
     }
 }
