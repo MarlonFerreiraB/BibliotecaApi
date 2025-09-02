@@ -19,6 +19,7 @@ public abstract class BookMapper {
     @Mapping(target = "author", expression = "java(authorRepository.findById(bookCreationDTO.getAuthorId()).orElse(null))" )
     public abstract BookModel toEntity(BookCreationDTO bookCreationDTO);
 
+    @Mapping(target = "author", source = "author")
     public abstract BookResponseDTO toResponse(BookModel bookModel);
 
     public abstract List<BookResponseDTO> toResponseList(List<BookModel> bookModels);
