@@ -13,5 +13,4 @@ public class AuthorResponseDTO {
     private String id;
     private String name;
 
-    private List<BookResponseDTO> books;
 }
