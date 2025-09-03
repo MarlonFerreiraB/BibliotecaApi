@@ -57,7 +57,7 @@ public class AuthorController {
     public ResponseEntity<Object> deleteAuthorById(@PathVariable String id){
         return authorRepository.findById(id).map(a -> {
             authorService.deleteAuthor(a);
-            return ResponseEntity.noContent().build();
+            return ResponseEntity.ok().build();
         }).orElseGet(() -> ResponseEntity.notFound().build());
     }
     @GetMapping()
