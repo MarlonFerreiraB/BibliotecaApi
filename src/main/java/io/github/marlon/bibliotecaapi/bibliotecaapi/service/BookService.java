@@ -10,6 +10,8 @@ import io.github.marlon.bibliotecaapi.bibliotecaapi.repository.BookRepository;
 import io.github.marlon.bibliotecaapi.bibliotecaapi.repository.specs.BookSpecs;
 import io.github.marlon.bibliotecaapi.bibliotecaapi.util.BookMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -55,7 +57,7 @@ public class BookService {
     }
 
     @Transactional(readOnly = true)
-    public List<BookModel> findyFilter(String title, GeneroEnum generoEnum, Integer anoPublicacao,String nomeAuthor ){
+    public Page<BookModel> findyFilter(String title, GeneroEnum generoEnum, Integer anoPublicacao, String nomeAuthor, Integer pagina, Integer tamnhoPagina ){
         Specification<BookModel> specs = ((root, query, criteriaBuilder) -> criteriaBuilder.conjunction() );
 
         if(title != null) specs = BookSpecs.titleEqual(title);
@@ -67,6 +69,6 @@ public class BookService {
 
         if(nomeAuthor != null) specs = BookSpecs.AutorjoinLivro(nomeAuthor);
 
-        return bookRepository.findAll(specs);
+        return bookRepository.findAll(specs, PageRequest.of(pagina,tamnhoPagina));
     }
 }

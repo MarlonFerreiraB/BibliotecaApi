@@ -10,6 +10,7 @@ import io.github.marlon.bibliotecaapi.bibliotecaapi.service.BookService;
 import io.github.marlon.bibliotecaapi.bibliotecaapi.util.BookMapper;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -64,16 +65,16 @@ public class BookController {
         }).orElseGet(() -> ResponseEntity.notFound().build());
     }
     @GetMapping
-    public ResponseEntity<List<BookResponseDTO>> resultSearch
+    public ResponseEntity<Page<BookResponseDTO>> resultSearch
             (@RequestParam(value = "title", required = false) String title,
              @RequestParam(value = "generoEnum", required = false) GeneroEnum generoEnum,
              @RequestParam(value = "anoPublicacao", required = false) Integer publicationYear,
-             @RequestParam(value = "author", required = false) String nomeAuthor) {
-        var result = bookService.findyFilter(title, generoEnum, publicationYear, nomeAuthor);
-        var lista = result.stream()
-                .map(bookMapper::toResponse)
-                .collect(Collectors.toList());
-        return ResponseEntity.ok(lista);
+             @RequestParam(value = "author", required = false) String nomeAuthor,
+             @RequestParam(value = "pagina", defaultValue = "0") Integer pagina,
+             @RequestParam(value = "tamano-pagina", defaultValue = "10") Integer tamanhoPagina) {
+        var result = bookService.findyFilter(title, generoEnum, publicationYear, nomeAuthor,pagina,tamanhoPagina);
+        Page<BookResponseDTO> map = result.map(bookMapper::toResponse);
+        return ResponseEntity.ok(map);
     }
 
 }
